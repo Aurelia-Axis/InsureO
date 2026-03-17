@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="GigShield delivery p.png" width="600">
+  <img src="GigShield delivery p.png" width="70%">
 </p>
 
 # GigShield - AI Powered Parametric Insurance for Gig Delivery Workers
