@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-<i> "Where Disruption Meets Protection, and Hustle Never Breaks" </i>
+<i> <b>  "Where Disruption Meets Protection, and Hustle Never Breaks" </b> </i>
 </p>
 
 GigShield is an AI-driven parametric insurance platform designed to protect delivery partners from income loss caused by external disruptions such as Traffic congestion, Algorithm changes, Weather or external issues etc.
