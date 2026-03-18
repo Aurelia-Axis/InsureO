@@ -53,12 +53,15 @@ These algorithms continuously change based on:
 - acceptance rate
 - zone prioritization
 
-Example scenario: 
+Example scenario:                                              
 |       Metric         |   Value  |
 |----------------------|----------|
-| Normal Daily Orders  |    12    |
+| Historical Avg Orders|    12    |
 | Orders After Change  |    3     |
-| Income Drop          | 60–80%   |
+| Drop percentage      |    75%   |
+| Threshold            |    70%   |
+| Status               |  Flagged |
+
 - <code>drop_percentage = (historical_avg - current_value) / historical_avg </code>
 - <code>drop_percenatge > threshold (e.g., 70%)</code> -> flag as **Potential Disruption**
 
