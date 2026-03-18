@@ -45,7 +45,7 @@ InsurO operates on three main pillars:
 
 
 ## Disruptions Covered 
-I. Platform Algorithm Disruption: Delivery platforms frequently update their order allocation algorithms, which can suddenly reduce      order distribution to certain workers.
+1. **Platform Algorithm Disruption:** Delivery platforms frequently update their order allocation algorithms, which can suddenly reduce order distribution to certain workers.
 These algorithms continuously change based on:
 - demand-supply ratio
 - delivery time optimization
@@ -64,7 +64,25 @@ Example scenario:
 
 - <code>drop_percentage = (historical_avg - current_value) / historical_avg </code>
 - <code>drop_percenatge > threshold (e.g., 70%)</code> -> flag as **Potential Disruption**
-
+2. **Weather Disruption:** Extreme weather conditions can reduce delivery activity or make travel unsafe.
+  Examples include:
+  - Heavy rainfall
+  - Extreme heat
+  - High AQI
+  - Storm conditions
+  Detection Logic
+```bash
+   1. Fetch real-time weather data (rainfall, alerts, etc.)
+   2. Detect disruption if conditions exceed threshold (e.g., heavy rain)
+   3. Validate impact:
+      - Worker in affected area
+      - Worker was active
+      - Delivery demand reduced
+   4. Calculate income loss:
+   loss = hourly_income × hours_lost
+   5. Apply payout policy (e.g., 80% of loss)
+   6. Run fraud checks (GPS, activity, duplicates)
+```
 
 
 
