@@ -54,9 +54,11 @@ These algorithms continuously change based on:
 - zone prioritization
 
 Example scenario: 
-- Normal day = 12 orders
-- After algorithm update/changes = 3 orders
-- Income drop can reach 60-80%
+|       Metric         |   Value  |
+|----------------------|----------|
+| Normal Daily Orders  |    12    |
+| Orders After Change  |    3     |
+| Income Drop          | 60–80%   |
 - <code>drop_percentage = (historical_avg - current_value) / historical_avg </code>
 - <code>drop_percenatge > threshold (e.g., 70%)</code> -> flag as **Potential Disruption**
 
