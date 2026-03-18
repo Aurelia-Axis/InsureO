@@ -53,6 +53,7 @@ These algorithms continuously change based on:
 - acceptance rate
 - zone prioritization
 
+Detection Logic :
 ```bash
     1. Track worker performance (orders/hour, earnings, idle time)
     2. Compare current data with historical average
@@ -87,7 +88,7 @@ Example scenario :
   - High AQI
   - Storm conditions
   
-  Detection Logic
+  Detection Logic :
 ```bash
    1. Fetch real-time weather data (rainfall, alerts, etc.)
    2. Detect disruption if conditions exceed threshold (e.g., heavy rain)
@@ -113,7 +114,7 @@ Example scenario :
 **We validate real-world impact before payout, ensuring compensation only when weather truly affects earnings.**
 
 3. **Traffic Congestion:** Heavy traffic can significantly slow down deliveries, reducing the number of orders completed per hour.
-   
+   Detection Logic :
    ```bash
     1. Track delivery time, speed, and orders/hour
     2. Fetch traffic level (API/mock)
@@ -142,19 +143,54 @@ Example Scenario :
 
 **We measure earning efficiency drop instead of relying on traffic data alone for accurate disruption detection.**
 
+4. **Restaurant Preparation Delay:** Delivery workers often lose time waiting for restaurants to prepare orders.
+   Detection Logic :
+   ```bash
+    1. Track order preparation time:
+       - Expected prep time (historical avg)
+       - Current prep time
+    
+    2. Detect delay:
+       - If current_prep_time > 2 × avg_prep_time → Delay detected
+    
+    3. Validate rider impact:
+       - Rider is at restaurant (GPS check)
+       - Waiting time exceeds minimum threshold
+       - Order status confirms delay
+    
+    4. Calculate income loss:
+       loss = (waiting_time / avg_delivery_time) × earning_per_delivery
+    
+    5. Apply payout policy:
+       payout = loss × coverage_factor (e.g., 70–80%)
+    
+    6. Run fraud checks:
+       - GPS spoofing detection
+       - Fake waiting prevention
+       - Duplicate claim check
+    
+    7. If valid → Auto-trigger claim & payout
+   ```
+   Example scenario :
+| Metric                     | Value |
+|---------------------------|-------|
+| Avg Prep Time             | 10 min |
+| Current Prep Time         | 30 min |
+| Delay Condition           | >2× (Triggered) |
+| Waiting Time              | 20 min |
+| Avg Delivery Time         | 20 min |
+| Earnings per Delivery     | ₹80   |
+| Estimated Loss            | ₹80   |
+| Coverage                  | 75%   |
+| Final Payout              | ₹60   |
+| Status                    | 🚨Delay Detected |
+
+**We compensate riders only when waiting time directly reduces earning opportunities.**
 
 
 
 
 
-
-
-# Workflow We will use this
-## Tasks
-- [x] User authentication
-- [x] Fraud detection module
-- [ ] Payment integration
-- [ ] Deployment
 
 
 
