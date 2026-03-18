@@ -181,42 +181,40 @@ Example scenario :
 
 **Note: We compensate riders only when waiting time directly reduces earning opportunities.**
 
-AI-Powered Risk Assessment
+## AI-Powered Risk Assessment
+InsurO continuously evaluates worker activity and environmental conditions using AI models.
 
-GigShield continuously evaluates worker activity and environmental conditions using AI models.
+- Smart Earnings Prediction Score
+  This AI model predicts expected earnings and disruption risk based on:
+  - historical order patterns
+  - weather conditions
+  - traffic congestion trends
+  - restaurant preparation times
+  - worker activity patterns
 
-Smart Earnings Prediction Score
+Example Output :
 
-This AI model predicts expected earnings and disruption risk based on:
+| Metric                     | Value        |
+|---------------------------|-------------|
+| Smart Earnings Score      | 78 / 100    |
+| Predicted Earnings Today  | ₹1200       |
+| Disruption Probability    | 35%         |
 
-• historical order patterns
-• weather conditions
-• traffic congestion trends
-• restaurant preparation times
-• worker activity patterns
+## Weekly Dynamic Pricing Model
+- InsurO follows a weekly insurance pricing model, aligned with the earning cycle of gig workers.
+  Instead of monthly premiums, workers subscribe to weekly protection plans.
 
-Example output:
+Example pricing :
 
-Smart Earnings Score: 78 / 100
-Predicted Earnings Today: ₹1200
-Disruption Probability: 35%
-Weekly Dynamic Pricing Model
+| Zone Level  | Price (per week) |
+|-------------|------------------|
+| Low         | ₹20              |
+| Medium      | ₹25              |
+| High        | ₹30              |
 
-GigShield follows a weekly insurance pricing model, aligned with the earning cycle of gig workers.
-
-Instead of monthly premiums, workers subscribe to weekly protection plans.
-
-Example pricing:
-
-Low Risk Zone → ₹20/week
-Medium Risk Zone → ₹25/week
-High Risk Zone → ₹30/week
-
-Premiums are dynamically adjusted using AI predictions.
-
-Dynamic Coverage Model
-
-Coverage percentage is not fixed. It adjusts based on worker reliability and historical behavior.
+- Premiums are dynamically adjusted using AI predictions.
+## Dynamic Coverage Model
+- Coverage percentage is not fixed. It adjusts based on worker reliability and historical behavior.
 
 Example:
 
@@ -227,16 +225,17 @@ Reliability Score	Coverage
 
 Example payout:
 
+```bash
 Income Loss = ₹1000
 Coverage = 80%
-
-Payout = ₹800
+Payout = ₹800</code>
+```
 
 This encourages honest participation and platform sustainability.
 
-Parametric Insurance Payout
+## Parametric Insurance Payout
 
-GigShield automatically calculates compensation when disruptions occur.
+InsurO automatically calculates compensation when disruptions occur.
 
 Formula
 Income Loss = Expected Earnings − Actual Earnings
@@ -251,9 +250,10 @@ Income Loss = ₹120
 Coverage = 70%
 
 Payout = ₹84
-Intelligent Fraud Detection
 
-GigShield integrates multiple fraud prevention mechanisms to ensure payouts remain fair.
+## Intelligent Fraud Detection
+
+InsurO integrates multiple fraud prevention mechanisms to ensure payouts remain fair.
 
 Algorithm Disruption Fraud Detection
 
@@ -265,7 +265,7 @@ The system verifies:
 
 If only one worker shows an order drop while others remain normal, the claim is flagged.
 
-Traffic Congestion Fraud Detection
+## Traffic Congestion Fraud Detection
 
 Traffic claims are validated using:
 
@@ -295,9 +295,9 @@ Weather claims are validated through:
 
 Workers cannot falsely claim weather disruptions if conditions remain normal.
 
-Smart Earnings Intelligence Features
+## Smart Earnings Intelligence Features
 
-GigShield also helps workers increase their earnings, not just protect them.
+InsurO also helps workers increase their earnings, not just protect them.
 
 Real-Time Disruption Map
 
