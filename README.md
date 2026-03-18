@@ -57,8 +57,8 @@ These algorithms continuously change based on:
     1. Track worker performance (orders/hour, earnings, idle time)
     2. Compare current data with historical average
     3. Detect sudden drop:
-       <code>drop % = (historical_avg - current_value) / historical_avg</code>
-    4. If drop_percentage > threshold (e.g., >30%) → **possible disruption**
+       drop % = (historical_avg - current_value) / historical_avg
+    4. If drop_percentage > threshold (e.g., >30%) → "possible disruption"
     5. Validate:
        - No weather/traffic issues
        - Zone demand is normal
@@ -68,7 +68,7 @@ These algorithms continuously change based on:
     8. If valid → Auto-trigger claim & payout
 ```
 
-Example scenario:                                              
+Example scenario :                                              
 |       Metric         |   Value  |
 |----------------------|----------|
 | Historical Avg Orders|    12    |
@@ -76,6 +76,9 @@ Example scenario:
 | Drop percentage      |    75%   |
 | Threshold            |    70%   |
 | Status               |🚩Flagged |
+
+**We detect invisible income loss caused by platform changes using behavioral anomaly analysis.**
+
 
 2. **Weather Disruption:** Extreme weather conditions can reduce delivery activity or make travel unsafe.
   Examples include:
@@ -97,7 +100,7 @@ Example scenario:
    5. Apply payout policy (e.g., 80% of loss)
    6. Run fraud checks (GPS, activity, duplicates)
 ```
-Example scenario:
+Example scenario :
 | Metric              | Value |
 |--------------------|-------|
 | Rainfall           | 130 mm |
@@ -107,9 +110,37 @@ Example scenario:
 | Final Payout       | ₹240   |
 | Status             | ✅Paid |
 
+**We validate real-world impact before payout, ensuring compensation only when weather truly affects earnings.**
 
+3. **Traffic Congestion:** Heavy traffic can significantly slow down deliveries, reducing the number of orders completed per hour.
+   
+   ```bash
+    1. Track delivery time, speed, and orders/hour
+    2. Fetch traffic level (API/mock)
+    3. Compare with normal delivery time:
+       delay_ratio = current_time / normal_time
+    4. If delay > threshold (e.g., >1.5) AND traffic = HIGH → disruption
+    5. Validate worker is active
+    6. Calculate income loss based on reduced deliveries
+    7. Run fraud checks (GPS, route, traffic mismatch)
+    8. If valid → Auto-trigger claim & payout
+   ```
+  
+Example Scenario :
+| Metric                | Value |
+|----------------------|-------|
+| Normal Orders/hour   | 4     |
+| Normal Earnings/hour | ₹160  |
+| Current Orders/hour  | 1     |
+| Current Earnings     | ₹40   |
+| Efficiency           | 0.25  |
+| Traffic Level        | High  |
+| Loss                 | ₹120  |
+| Coverage             | 70%   |
+| Final Payout         | ₹84   |
+| Status               | 🚨 Disruption Detected |
 
-
+**We measure earning efficiency drop instead of relying on traffic data alone for accurate disruption detection.**
 
 
 
