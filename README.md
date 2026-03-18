@@ -78,7 +78,7 @@ Example scenario :
 | Threshold            |    70%   |
 | Status               |🚩Flagged |
 
-**We detect invisible income loss caused by platform changes using behavioral anomaly analysis.**
+**Note: We detect invisible income loss caused by platform changes using behavioral anomaly analysis.**
 
 
 2. **Weather Disruption:** Extreme weather conditions can reduce delivery activity or make travel unsafe.
@@ -111,7 +111,7 @@ Example scenario :
 | Final Payout       | ₹240   |
 | Status             | ✅Paid |
 
-**We validate real-world impact before payout, ensuring compensation only when weather truly affects earnings.**
+**Note: We validate real-world impact before payout, ensuring compensation only when weather truly affects earnings.**
 
 3. **Traffic Congestion:** Heavy traffic can significantly slow down deliveries, reducing the number of orders completed per hour.
    Detection Logic :
@@ -141,7 +141,7 @@ Example Scenario :
 | Final Payout         | ₹84   |
 | Status               | 🚨 Disruption Detected |
 
-**We measure earning efficiency drop instead of relying on traffic data alone for accurate disruption detection.**
+**Note: We measure earning efficiency drop instead of relying on traffic data alone for accurate disruption detection.**
 
 4. **Restaurant Preparation Delay:** Delivery workers often lose time waiting for restaurants to prepare orders.
    Detection Logic :
@@ -179,7 +179,7 @@ Example scenario :
 | Final Payout              | ₹60   |
 | Status                    | 🚨Delay Detected |
 
-**We compensate riders only when waiting time directly reduces earning opportunities.**
+**Note: We compensate riders only when waiting time directly reduces earning opportunities.**
 
 
 
