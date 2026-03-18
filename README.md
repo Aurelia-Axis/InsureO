@@ -149,30 +149,24 @@ Example Scenario :
     1. Track order preparation time:
        - Expected prep time (historical avg)
        - Current prep time
-    
     2. Detect delay:
        - If current_prep_time > 2 × avg_prep_time → Delay detected
-    
     3. Validate rider impact:
        - Rider is at restaurant (GPS check)
        - Waiting time exceeds minimum threshold
        - Order status confirms delay
-    
     4. Calculate income loss:
        loss = (waiting_time / avg_delivery_time) × earning_per_delivery
-    
     5. Apply payout policy:
        payout = loss × coverage_factor (e.g., 70–80%)
-    
     6. Run fraud checks:
        - GPS spoofing detection
        - Fake waiting prevention
        - Duplicate claim check
-    
     7. If valid → Auto-trigger claim & payout
    ```
    Example scenario :
-| Metric                     | Value |
+| Metric                    | Value |
 |---------------------------|-------|
 | Avg Prep Time             | 10 min |
 | Current Prep Time         | 30 min |
