@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="InsurO.png" width="600px" alt="InsurO Logo">
+  <img src="InsureO.png" width="600px" alt="InsureO Logo">
 </p>
 
-<h1 align="center">InsurO</h1>
+<h1 align="center">InsureO</h1>
 
 <p align="center">
   <strong>AI-Powered Parametric Insurance for India's Gig Delivery Workers</strong>
@@ -37,22 +37,22 @@ Every day, things outside their control destroy their income:
 
 ---
 
-## 💡 Our Solution — InsurO
+## 💡 Our Solution — InsureO
 
-InsurO is an **AI-driven parametric insurance platform** that:
+InsureO is an **AI-driven parametric insurance platform** that:
 
 -  **Automatically detects** income-impacting disruptions in real time
 -  **Measures actual earning loss** — not just traffic or weather conditions
 -  **Triggers instant payouts** without any manual claim filing
 -  **Predicts disruptions before they happen** so workers can avoid income loss proactively
 
-> InsurO doesn't ask workers to prove their loss. The system detects it, verifies it, and pays it — automatically.
+> InsureO doesn't ask workers to prove their loss. The system detects it, verifies it, and pays it — automatically.
 
 ---
 
 ## The Core Innovation: Earning Efficiency Model
 
-Most systems ask: *"Is there traffic?"* — InsurO asks: **"Has the worker's earning ability actually dropped?"**
+Most systems ask: *"Is there traffic?"* — InsureO asks: **"Has the worker's earning ability actually dropped?"**
 
 ```
 efficiency = current_earnings / expected_earnings
@@ -66,7 +66,7 @@ efficiency = current_earnings / expected_earnings
 | Earnings/hour | ₹160 | ₹40 |
 | Efficiency Score | 1.0 | **0.25** |
 
-InsurO triggers a payout only when:
+InsureO triggers a payout only when:
 1. An external disruption is confirmed (traffic / weather / algorithm / delay)
 2. **AND** the worker's efficiency drops below `0.5`
 
@@ -97,7 +97,7 @@ This prevents fraud and ensures payouts are genuinely warranted.
 
 **The Problem:** Heavy traffic reduces deliveries from 4/hour to 1/hour. Workers are active but inefficient, this is still income loss.
 
-**InsurO's Detection Logic:**
+**InsureO's Detection Logic:**
 ```
 delay_ratio = current_delivery_time / normal_delivery_time
 
@@ -125,7 +125,7 @@ AND efficiency < 0.5
 
 **The Problem:** Heavy rain, extreme heat, or storms reduce delivery activity or make roads unsafe.
 
-**InsurO's Detection Logic:**
+**InsureO's Detection Logic:**
 ```
 Fetch real-time weather data
 IF rainfall > threshold (e.g., 100mm) OR weather alert active
@@ -159,7 +159,7 @@ IF rainfall > threshold (e.g., 100mm) OR weather alert active
 
 **The Problem:** Zomato, Swiggy, and Zepto update their order allocation algorithms silently. A worker's orders can drop 75% overnight with no explanation, this is **invisible income shock**.
 
-**InsurO's Detection Logic (AI-Powered):**
+**InsureO's Detection Logic (AI-Powered):**
 ```python
 # Anomaly Detection using Z-score
 z_score = (current_orders - historical_mean) / std_dev
@@ -186,7 +186,7 @@ Advanced approach uses **Isolation Forest** (scikit-learn) for behavioral anomal
 
 ---
 
-### 4. 🍳 Restaurant Preparation Delay
+### 4. Restaurant Preparation Delay
 
 **The Problem:** Riders wait 20–30 minutes at restaurants for orders to be prepared, time they could have used for another delivery.
 
@@ -219,7 +219,7 @@ payout = loss × coverage_factor (70–80%)
 
 ##  Smart Payout Model
 
-InsurO uses **dynamic parametric payouts**, not fixed amounts.
+InsureO uses **dynamic parametric payouts**, not fixed amounts.
 
 ```
 Income Loss = Expected Earnings − Actual Earnings
@@ -248,7 +248,7 @@ Insurance Payout = Coverage % × Income Loss
 
 ##  AI-Powered Risk Assessment
 
-InsurO continuously scores every worker:
+InsureO continuously scores every worker:
 
 | Output | Value |
 |---|---|
@@ -270,7 +270,7 @@ This score is computed using:
 ### 1. Predictive Traffic Avoidance
 > *"Traffic likely to increase in 15 minutes in Area A - move now"*
 
-InsurO predicts congestion **before** it hits using forecast APIs and historical patterns, allowing workers to reposition proactively.
+InsureO predicts congestion **before** it hits using forecast APIs and historical patterns, allowing workers to reposition proactively.
 
 ### 2. Smart Zone Switching
 ```
@@ -394,7 +394,7 @@ Every payout goes through a multi-layer fraud check:
 
 ##  Impact & Vision
 
-InsurO is not just insurance, it is an **earnings intelligence platform** for India's gig workers.
+InsureO is not just insurance, it is an **earnings intelligence platform** for India's gig workers.
 
 | Metric | Estimate |
 |---|---|
@@ -403,7 +403,7 @@ InsurO is not just insurance, it is an **earnings intelligence platform** for In
 | Avg Weekly Premium | ₹20–₹30 |
 | Avg Payout per Disruption Event | ₹60–₹240 |
 
-> **InsurO transforms gig worker insurance from a reactive compensation system into a proactive financial shield protecting income before, during, and after every disruption.**
+> **InsureO transforms gig worker insurance from a reactive compensation system into a proactive financial shield protecting income before, during, and after every disruption.**
 
 ---
 
