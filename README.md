@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="InsurO.png" width="600px" alt="InsureO Logo">
+  <img src="InsurO.png" width="200px" alt="InsureO Logo">
 </p>
 
 <h1 align="center">InsureO</h1>
@@ -93,6 +93,7 @@ delay_ratio = current_delivery_time / normal_delivery_time
 IF delay_ratio > 1.5
 AND traffic_level = HIGH
 AND efficiency < 0.5
+AND route_optimality = ACCEPTABLE
 -> DISRUPTION TRIGGERED
 ```
 
@@ -107,6 +108,18 @@ Payout example:
 | Final Payout | Rs.84 |
 
 Fraud check: GPS routes are cross-checked against live traffic data. If a worker is slow but traffic is normal, the claim is rejected.
+
+Intentional route misuse handling: The system compares the worker's actual GPS route against the recommended optimal route available at the time of delivery. If the worker knowingly took a longer or heavier traffic route when a reasonable alternative was available and they had already been alerted about it, the claim is flagged. A route deviation score is calculated, and if it crosses the acceptable threshold, the payout is reduced proportionally or rejected based on the severity of the deviation.
+
+```
+route_deviation = actual_route_time / optimal_route_time
+
+IF route_deviation > 1.3
+AND optimal_route_was_suggested = true
+-> claim reduced or flagged for review
+```
+
+This ensures the system only compensates workers who were genuinely stuck, not those who deliberately chose a high traffic path.
 
 ---
 
@@ -141,6 +154,8 @@ Warning: Heavy rain expected at 7 PM (70% probability)
 Predicted income drop: 25%
 Suggested action: Work early hours or switch to Zone B
 ```
+
+Note on alert compliance: Voice and predictive alerts are advisory in nature. InsureO does not penalise a worker for not acting on a suggestion. The payout is always determined by the actual earning efficiency drop at the time of the disruption, not by whether the worker followed the alert. If a worker ignores a zone switch suggestion and still experiences a genuine efficiency drop due to the disruption, they remain eligible for compensation. The alerts exist to help workers earn more, not to create conditions for denying their claims.
 
 ---
 
@@ -179,17 +194,31 @@ Our system goes beyond visible disruptions like weather by detecting invisible i
 
 Riders sometimes wait 20-30 minutes at restaurants for orders to be prepared — time they could have spent completing another delivery.
 
+Not every order that takes longer than average is a disruption. Some items genuinely take more time to prepare. The system accounts for this with a tolerance buffer so workers are not compensated for natural variation in prep time, only for genuinely excessive delays.
+
 Detection logic:
 ```
-IF current_prep_time > 2 x avg_prep_time
+tolerance_threshold = avg_prep_time x 1.5   (buffer for natural variation)
+delay_threshold     = avg_prep_time x 2.0   (confirmed excessive delay)
+
+IF current_prep_time > delay_threshold
 AND rider GPS confirms location at restaurant
 AND waiting_time > minimum threshold
 -> DELAY DETECTED
+
+Compensable waiting time = current_prep_time - tolerance_threshold
+(only the time beyond the tolerance buffer is counted as loss)
 ```
+
+This means if average prep time is 10 minutes:
+- Up to 15 minutes (1.5x) — considered normal, no compensation
+- Beyond 15 minutes — counted as delay, compensation starts from this point
+- Beyond 20 minutes (2x) — confirmed disruption, full payout logic applies
 
 Loss formula:
 ```
-loss = (waiting_time / avg_delivery_time) x earning_per_delivery
+compensable_wait = current_prep_time - tolerance_threshold
+loss = (compensable_wait / avg_delivery_time) x earning_per_delivery
 payout = loss x coverage_factor (70-80%)
 ```
 
@@ -198,11 +227,14 @@ Payout example:
 | Metric | Value |
 |---|---|
 | Average Prep Time | 10 min |
+| Tolerance Buffer (1.5x) | 15 min |
 | Current Prep Time | 30 min |
-| Waiting Time | 20 min |
-| Estimated Loss | Rs.80 |
+| Compensable Waiting Time | 15 min (30 - 15) |
+| Estimated Loss | Rs.60 |
 | Coverage | 75% |
-| Final Payout | Rs.60 |
+| Final Payout | Rs.45 |
+
+This approach gives fair leverage to restaurants for items that naturally take longer, while still protecting riders from genuinely unreasonable waits.
 
 ---
 
@@ -243,6 +275,7 @@ InsureO continuously scores every worker based on:
 - Traffic congestion trends
 - Restaurant preparation history
 - Worker activity patterns
+- Worker Performance Matrix (normal scenario baseline)
 
 Sample output:
 
@@ -251,6 +284,48 @@ Sample output:
 | Smart Earnings Score | 78 / 100 |
 | Predicted Earnings Today | Rs.1,200 |
 | Disruption Probability | 35% |
+
+---
+
+## Worker Performance Matrix
+
+This is an additional layer introduced to measure a worker's genuineness and consistency in normal working conditions — days with no disruption, no bad weather, and no traffic issues.
+
+The idea is simple. If a worker performs well on regular days, it shows they are actively working and not trying to game the system. This performance record becomes an additional parameter that influences claim eligibility and payout coverage.
+
+What is tracked during normal scenarios:
+
+| Parameter | What It Measures |
+|---|---|
+| Avg orders/hour on normal days | Baseline delivery productivity |
+| Avg speed on normal days | Active movement, not idle |
+| Acceptance rate | Willingness to take orders |
+| Login hours vs active hours | Actual working effort |
+| On-time delivery rate | Reliability as a worker |
+| Claim frequency vs disruption frequency | Whether claims match real events |
+
+How it affects payouts:
+
+A worker with a strong normal-day performance record gets a higher Genuineness Score. This score works alongside the reliability score and directly influences how claims are processed.
+
+```
+genuineness_score = weighted average of normal-day performance metrics
+
+IF genuineness_score is HIGH
+-> claim processed faster, coverage at upper range (80%)
+
+IF genuineness_score is LOW
+-> claim sent for additional review, coverage at lower range (60%)
+```
+
+Example:
+
+| Worker | Avg Orders/hr (Normal) | Acceptance Rate | Genuineness Score | Coverage Applied |
+|---|---|---|---|---|
+| Worker A | 5.2 | 92% | High | 80% |
+| Worker B | 2.1 | 54% | Low | 60% + manual review |
+
+This matrix ensures that workers who are genuinely active and productive on normal days are rewarded with faster and higher payouts when a real disruption hits. Workers who show low activity even on normal days face more scrutiny before their disruption claims are approved.
 
 ---
 
@@ -299,17 +374,17 @@ Types of voice alerts:
 How it works:
 ```
 Traffic API / Weather API / Parametric Trigger
-          ⇩
+          |
   Event Detection Engine (Backend)
-          ⇩
+          |
   Alert Generation
-          ⇩
+          |
   Priority and Filtering (max 1 alert per 2 minutes)
-          ⇩
+          |
   WebSocket -> Mobile App
-          ⇩
+          |
   Text-to-Speech Engine (Google TTS / Expo Speech)
-          ⇩
+          |
   Audio output through speaker or earphones
 ```
 
@@ -339,12 +414,15 @@ Every payout goes through a multi-layer fraud check:
 
 | Disruption Type | Fraud Signals Monitored |
 |---|---|
-| Traffic | GPS route + speed + nearby worker speeds |
+| Traffic | GPS route + speed + nearby worker speeds + route deviation from optimal path |
 | Weather | Weather API + city alerts + zone activity |
 | Algorithm | Cross-worker order distribution + login patterns |
-| Restaurant Delay | Restaurant timestamps + multi-worker corroboration |
+| Restaurant Delay | Restaurant timestamps + compensable wait (beyond tolerance buffer) + multi-worker corroboration |
+| All types | Worker Performance Matrix (normal-day baseline) + genuineness score |
 
 If only one worker shows an anomaly while all nearby workers are performing normally, the claim is flagged and held for review.
+
+If a worker's normal-day performance is consistently low and they suddenly file multiple disruption claims, the system flags this pattern and routes it for manual review before processing the payout.
 
 ---
 
@@ -356,29 +434,29 @@ If only one worker shows an anomaly while all nearby workers are performing norm
 |  Weather API, Traffic API, Maps API      |
 |  Mock Delivery API, Surge Detection      |
 +------------------------------------------+
-                    ⇓
+                    |
 +------------------------------------------+
 |        Backend (Node.js / FastAPI)       |
 |  API Gateway, Event Detection Engine     |
 |  Alert Generation, Parametric Triggers   |
 |  Fraud Detection, Priority Filtering     |
 +------------------------------------------+
-        🡳                    🡳
+        |                    |
 +---------------+   +--------------------+
 |  AI Engine    |   |  Real-Time Layer   |
 |  (Python)     |   |  WebSockets        |
 |  scikit-learn |   |  Socket.io         |
 |  pandas       |   |  Live map + Voice  |
 +---------------+   +--------------------+
-        🡳                    🡳
+        |                    |
 +------------------------------------------+
 |          Database Layer                  |
 |  PostgreSQL (structured data)            |
 |  MongoDB (activity logs + alerts)        |
 +------------------------------------------+
-                    🡳
+                    |
         +-----------+------------+
-        🡫                       🡫
+        |                        |
 +----------------+   +--------------------------+
 | Payment        |   |  Mobile App (Frontend)   |
 | Gateway        |   |  React, Dashboard        |
@@ -413,31 +491,36 @@ WebSockets (Socket.io) handle both live map updates and real-time voice alert de
 
 ```
 1. Worker logs in and starts shift
-         🡫   
+         |
 2. InsureO builds/updates baseline profile
    (avg speed, orders/hour, earnings/hour)
-         🡫
+   + updates Worker Performance Matrix (normal day data)
+         |
 3. Real-time monitoring begins
    (GPS, order rate, traffic, weather)
-         🡫
+         |
 4. Disruption signal detected
-         🡫
+         |
 5. Earning efficiency score calculated
    IF efficiency < 0.5 -> PROCEED
-         🡫
+         |
 6. External cause validated
    (weather API / traffic API / cross-worker data)
-         🡫
-7. Fraud checks run
-   (GPS, activity logs, zone demand)
-         🡫
-8. If valid -> Claim auto-triggered
-         🡫
-9. Payout calculated dynamically
-         🡫
-10. Instant payment processed (Razorpay)
-         🡫
-11. Voice alert played to worker:
+         |
+7. Route deviation check (for traffic claims)
+   IF worker ignored optimal route -> reduce or flag claim
+         |
+8. Fraud checks run
+   (GPS, activity logs, zone demand, genuineness score)
+         |
+9. If valid -> Claim auto-triggered
+         |
+10. Payout calculated dynamically
+    (coverage % adjusted based on genuineness score)
+         |
+11. Instant payment processed (Razorpay)
+         |
+12. Voice alert played to worker:
     "Disruption detected. Compensation initiated."
 ```
 
@@ -458,9 +541,81 @@ InsureO transforms gig worker insurance from a reactive compensation system into
 
 ---
 
+## Development Roadmap
+
+### Phase 1 — Core Foundation
+Status: In Progress
+
+- Set up project structure (React frontend, Node.js backend, Python AI service)
+- Build worker profile and baseline tracking (orders/hour, speed, earnings/hour)
+- Implement the Earning Efficiency Model
+- Integrate OpenWeather API for weather disruption detection
+- Integrate Traffic API (mock or Google Maps) for congestion detection
+- Basic payout calculation engine (loss x coverage %)
+- Simple worker dashboard showing current earnings and efficiency score
+
+---
+
+### Phase 2 — AI and Disruption Detection
+Status: Planned
+
+- Implement Z-score anomaly detection for platform algorithm disruption
+- Integrate Isolation Forest model (scikit-learn) for advanced behavioral anomaly detection
+- Build restaurant delay detection using GPS and prep time tracking
+- Connect all four disruption types to the parametric trigger engine
+- Add fraud detection layer (GPS cross-check, activity logs, cross-worker validation)
+- Set up PostgreSQL and MongoDB databases
+
+---
+
+### Phase 3 — Automation and Payouts
+Status: Planned
+
+- Integrate Razorpay for instant automated payouts
+- Build the auto-claim trigger pipeline (disruption detected -> fraud check -> payout)
+- Implement dynamic coverage model based on reliability score
+- Add weekly subscription and premium management
+- Real-time WebSocket setup for live data updates
+
+---
+
+### Phase 4 — Smart Features
+Status: Planned
+
+- Build live loss heatmap (red / yellow / green zones on map)
+- Add smart zone switching suggestions based on demand and traffic
+- Implement predictive alerts using weather forecast API and historical patterns
+- Micro-compensation engine (credits every 15 minutes during disruption)
+- Community disruption reporting feature
+
+---
+
+### Phase 5 — Voice and UX
+Status: Planned
+
+- Integrate Text-to-Speech engine (Google TTS / Expo Speech)
+- Build voice alert system with priority filtering and alert throttling
+- Add multi-language support (English, Hindi, Odia)
+- Context-aware alerts (activates only when worker is moving)
+- Polish mobile UI for field use (large buttons, minimal taps)
+
+---
+
+### Phase 6 — Testing and Launch
+Status: Planned
+
+- End-to-end testing of all disruption detection flows
+- Fraud detection stress testing with simulated fake claims
+- Load testing for real-time WebSocket and payout pipeline
+- Beta test with a small group of delivery workers
+- Final UI/UX improvements based on feedback
+- Hackathon submission and demo preparation
+
+---
+
 ## Team
 
-Built by Aurelia Axis
+Built at [Hackathon Name]
 
 ---
 
