@@ -299,17 +299,17 @@ Types of voice alerts:
 How it works:
 ```
 Traffic API / Weather API / Parametric Trigger
-          |
+          ⇩
   Event Detection Engine (Backend)
-          |
+          ⇩
   Alert Generation
-          |
+          ⇩
   Priority and Filtering (max 1 alert per 2 minutes)
-          |
+          ⇩
   WebSocket -> Mobile App
-          |
+          ⇩
   Text-to-Speech Engine (Google TTS / Expo Speech)
-          |
+          ⇩
   Audio output through speaker or earphones
 ```
 
@@ -356,29 +356,29 @@ If only one worker shows an anomaly while all nearby workers are performing norm
 |  Weather API, Traffic API, Maps API      |
 |  Mock Delivery API, Surge Detection      |
 +------------------------------------------+
-                    |
+                    ⇓
 +------------------------------------------+
 |        Backend (Node.js / FastAPI)       |
 |  API Gateway, Event Detection Engine     |
 |  Alert Generation, Parametric Triggers   |
 |  Fraud Detection, Priority Filtering     |
 +------------------------------------------+
-        |                    |
+        🡳                    🡳
 +---------------+   +--------------------+
 |  AI Engine    |   |  Real-Time Layer   |
 |  (Python)     |   |  WebSockets        |
 |  scikit-learn |   |  Socket.io         |
 |  pandas       |   |  Live map + Voice  |
 +---------------+   +--------------------+
-        |                    |
+        🡳                    🡳
 +------------------------------------------+
 |          Database Layer                  |
 |  PostgreSQL (structured data)            |
 |  MongoDB (activity logs + alerts)        |
 +------------------------------------------+
-                    |
+                    🡳
         +-----------+------------+
-        |                        |
+        🡫                       🡫
 +----------------+   +--------------------------+
 | Payment        |   |  Mobile App (Frontend)   |
 | Gateway        |   |  React, Dashboard        |
@@ -413,30 +413,30 @@ WebSockets (Socket.io) handle both live map updates and real-time voice alert de
 
 ```
 1. Worker logs in and starts shift
-         |
+         🡫   
 2. InsureO builds/updates baseline profile
    (avg speed, orders/hour, earnings/hour)
-         |
+         🡫
 3. Real-time monitoring begins
    (GPS, order rate, traffic, weather)
-         |
+         🡫
 4. Disruption signal detected
-         |
+         🡫
 5. Earning efficiency score calculated
    IF efficiency < 0.5 -> PROCEED
-         |
+         🡫
 6. External cause validated
    (weather API / traffic API / cross-worker data)
-         |
+         🡫
 7. Fraud checks run
    (GPS, activity logs, zone demand)
-         |
+         🡫
 8. If valid -> Claim auto-triggered
-         |
+         🡫
 9. Payout calculated dynamically
-         |
+         🡫
 10. Instant payment processed (Razorpay)
-         |
+         🡫
 11. Voice alert played to worker:
     "Disruption detected. Compensation initiated."
 ```
