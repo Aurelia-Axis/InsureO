@@ -2,20 +2,20 @@ import axios from "axios";
 
 // Uses env variable when deployed, falls back to localhost in dev
 const isLocal  = window.location.hostname === "localhost";
-const CORE_URL = isLocal ? "http://localhost:8000/api" : "https://insureo.onrender.com/api";
-const RT_URL   = isLocal ? "http://localhost:3001/api" : "https://insureo.onrender.com/api";
+const CORE_URL = isLocal ? "http://localhost:8000/api" : "https://insureo.onrender.com/api/";
+const RT_URL   = isLocal ? "http://localhost:3001/api" : "https://insureo.onrender.com/api/";
 
 const core = axios.create({ baseURL: CORE_URL, timeout: 30000 });
 const rt   = axios.create({ baseURL: RT_URL,   timeout: 30000 });
 
 // --- Workers ---
-export const registerWorker  = (payload) => core.post("/workers", payload).then(r => r.data);
+export const registerWorker  = (payload) => core.post("/workers/", payload).then(r => r.data);
 export const getWorker       = (id)       => core.get(`/workers/${id}`).then(r => r.data);
 export const listWorkers     = ()         => core.get("/workers").then(r => r.data);
 export const updateBaseline  = (id, amt)  => core.patch(`/workers/${id}/baseline?baseline_earnings=${amt}`).then(r => r.data);
 
 // --- Claims ---
-export const submitClaim     = (payload)  => core.post("/claims/submit", payload).then(r => r.data);
+export const submitClaim     = (payload)  => core.post("/claims/submit/", payload).then(r => r.data);
 export const getWorkerClaims = (id)       => core.get(`/claims/worker/${id}`).then(r => r.data);
 export const listClaims      = (status)   => core.get("/claims", { params: { status } }).then(r => r.data);
 
