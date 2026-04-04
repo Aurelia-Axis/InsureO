@@ -12,16 +12,24 @@ router = APIRouter()
 
 @router.post("/", response_model=WorkerOut, status_code=201)
 async def register_worker(payload: WorkerCreate, db: AsyncSession = Depends(get_db)):
-    worker = Worker(**payload.model_dump())
+    # If phone already exists, return existing worker
+    existing = await db.execute(select(Worker).where(Worker.phone == payload.phone))
+    found = existing.scalar_one_or_none()
+    if found:
+        return found
 
-    # Set weekly premium based on risk zone
+    worker = Worker(**payload.model_dump())
     premium_map = {"low": 20.0, "medium": 25.0, "high": 30.0}
     worker.premium_weekly = premium_map.get(worker.risk_zone.value, 25.0)
 
-    db.add(worker)
-    await db.commit()
-    await db.refresh(worker)
-    return worker
+    try:
+        db.add(worker)
+        await db.commit()
+        await db.refresh(worker)
+        return worker
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/{worker_id}", response_model=WorkerOut)
